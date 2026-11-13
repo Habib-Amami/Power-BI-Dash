@@ -1,0 +1,37 @@
+Grand Prix Race Count =
+DISTINCTCOUNT ( FactGrandPrixEntries[raceId] )
+
+Grand Prix Entry Count =
+COUNTROWS ( FactGrandPrixEntries )
+
+Overview Selection Context =
+VAR SelectedSeason =
+    IF (
+        HASONEVALUE ( DimRace[year] ),
+        SELECTEDVALUE ( DimRace[year] ) & "",
+        IF ( ISFILTERED ( DimRace[year] ), "Multiple", "All" )
+    )
+VAR SelectedDriver =
+    IF (
+        HASONEVALUE ( DimDriver[driverId] ),
+        SELECTEDVALUE ( DimDriver[forename] ) & " "
+            & SELECTEDVALUE ( DimDriver[surname] ),
+        IF ( ISFILTERED ( DimDriver[driverId] ), "Multiple", "All" )
+    )
+VAR SelectedTeam =
+    IF (
+        HASONEVALUE ( DimConstructor[constructorId] ),
+        SELECTEDVALUE ( DimConstructor[Team] ),
+        IF ( ISFILTERED ( DimConstructor[constructorId] ), "Multiple", "All" )
+    )
+VAR SelectedCircuit =
+    IF (
+        HASONEVALUE ( DimCircuit[circuitId] ),
+        SELECTEDVALUE ( DimCircuit[name] ),
+        IF ( ISFILTERED ( DimCircuit[circuitId] ), "Multiple", "All" )
+    )
+RETURN
+    "Season: " & SelectedSeason
+        & " | Driver: " & SelectedDriver
+        & " | Team: " & SelectedTeam
+        & " | Circuit: " & SelectedCircuit
